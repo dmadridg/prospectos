@@ -12,10 +12,6 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-    // BigInt.prototype.toJSON = function () {
-    //     return this.toString()
-    // }
-
     const formData = new formidable.IncomingForm();
     formData.parse(req, async function (err, fields, files) {
         const prospecto = JSON.parse(fields.data);
@@ -33,12 +29,25 @@ export default async function handler(req, res) {
                 status: 0,
             }
         });
-        prisma.$disconnect();
 
         for (let index = 1; index <= fields.no_files; index++) {
             const element = files[`file_${index}`];
+
+            var file_name_string = element.originalFilename;
+            var file_name_array = file_name_string.split(".");
+            let ext = file_name_array[file_name_array.length - 1];
+
+            const file_name = element.newFilename;
+            const newFile = await prisma.prospecto_Docs.create({
+                data: {
+                    prospectoId: newProspecto.id,
+                    documento: `${file_name}.${ext}`,
+                }
+            });
+
             await saveFile(element, newProspecto.id);
         }
+        prisma.$disconnect();
 
         return res.json({
             data: newProspecto,
@@ -75,9 +84,7 @@ export default async function handler(req, res) {
 }
 
 const saveFile = async (file, prospecto_id) => {
-
     const data = fs.readFileSync(file.filepath);
-
     var file_name_string = file.originalFilename;
     var file_name_array = file_name_string.split(".");
     let ext = file_name_array[file_name_array.length - 1];
@@ -85,12 +92,5 @@ const saveFile = async (file, prospecto_id) => {
     const file_name = file.newFilename;
     fs.writeFileSync(`./public/docs/${file_name}.${ext}`, data);
     await fs.unlinkSync(file.filepath);
-    const newFile = await prisma.prospecto_Docs.create({
-        data: {
-            prospectoId: prospecto_id,
-            documento: `${file_name}.${ext}`,
-        }
-    });
-    prisma.$disconnect();
     return true;
 };
