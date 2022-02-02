@@ -6,12 +6,6 @@ generator client {
   previewFeatures = ["referentialIntegrity"]
 }
 
-// datasource db {
-//   provider          = "mysql"
-//   url               = "mysql://29jqw8lvo4mv:pscale_pw_fynPkUmS1rOOX07DYNhsHox8Q-DqvJVUNGDcPQsDcZU@h68yww2gnauz.us-west-2.psdb.cloud/prospectos?sslaccept=strict"
-//   shadowDatabaseUrl = "mysql://u3d2rgrcdju6:pscale_pw_NccnVDmLSVFBQKFwUGBUQqXl0judtYsIftNm7PwcMQg@vy0fojziwos6.us-west-2.psdb.cloud:3306/prospectos?sslaccept=strict"
-// }
-
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
