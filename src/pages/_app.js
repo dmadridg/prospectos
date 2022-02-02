@@ -9,11 +9,11 @@ export default function App({
 }) {
   return (
     <SessionProvider session={session}>
-      <Windmill>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </Windmill>
+        <Windmill usePreferences>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </Windmill>
     </SessionProvider>
   )
 }
